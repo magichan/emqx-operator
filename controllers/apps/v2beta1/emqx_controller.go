@@ -111,8 +111,8 @@ func (r *EMQXReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	}
 
 	for _, subReconciler := range []subReconciler{
-		&addBootstrap{r},
-		&updateStatus{r},
+		&addBootstrap{r}, // 生成 cookie 和 bootstrap key
+		&updateStatus{r}, // 更新 replicatset 的状态
 		&syncConfig{r},
 		&addSvc{r},
 		&addCore{r},

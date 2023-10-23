@@ -71,6 +71,7 @@ func GetEmqxImage(instance Emqx) string {
 	)
 }
 
+// 以关键对象为中心，构建其他几个对象的名称
 // +kubebuilder:object:generate=false
 type Names struct {
 	metav1.Object
