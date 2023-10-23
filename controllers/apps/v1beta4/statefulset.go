@@ -102,6 +102,10 @@ func getAllStatefulSet(k8sClient client.Client, instance appsv1beta4.Emqx) ([]*a
 	return allSts, nil
 }
 
+// InClusterStatefulSets 代表着什么？
+// 代码的含义是：
+// 1. statfulset 中处于 running 状态的 pod 和 status 的 emqxNode 的 running 状态匹配，记作 readyCount+1
+// 2. readyCount 和 statfulset 的 currentReplicas 相等，记作 inCluster+1
 func getInClusterStatefulSets(k8sClient client.Client, instance appsv1beta4.Emqx) ([]*appsv1.StatefulSet, error) {
 	allSts, err := getAllStatefulSet(k8sClient, instance)
 	if err != nil {

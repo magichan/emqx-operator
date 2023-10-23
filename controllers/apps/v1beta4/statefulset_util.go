@@ -34,6 +34,8 @@ import (
 )
 
 // Helper functions
+
+// 更多的注释
 func getEmqxNodeName(instance appsv1beta4.Emqx, pod *corev1.Pod) string {
 	return fmt.Sprintf(
 		"%s@%s.%s",

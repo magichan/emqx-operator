@@ -109,7 +109,10 @@ func (r *EmqxReconciler) Do(ctx context.Context, instance appsv1beta4.Emqx) (ctr
 		} else {
 			subResult = subReconcilers[i].reconcile(ctx, instance)
 		}
+		// 重名问题，类型不一样，还是要同样的名字
 		subResult, err := r.processResult(subResult, instance)
+		// 什么时候决定是否继续执行下一个subReconcilers
+		// 什么时候决定交给 reconcile loop
 		if err != nil || !subResult.IsZero() {
 			return subResult, err
 		}

@@ -59,7 +59,7 @@ func (s updateEmqxStatus) updateCondition(instance appsv1beta4.Emqx) error {
 		if instance.GetStatus().GetReadyReplicas() == instance.GetStatus().GetReplicas() {
 			instance.GetStatus().AddCondition(
 				appsv1beta4.ConditionRunning,
-				corev1.ConditionTrue,
+				corev1.ConditionTrue,replicas
 				"ClusterReady",
 				"All resources are ready",
 			)
@@ -76,12 +76,16 @@ func (s updateEmqxStatus) updateCondition(instance appsv1beta4.Emqx) error {
 		}
 	}
 	if len(inClusterStss) > 1 {
+		// 处于升级状态，同时要是商业版本支持
 		enterprise, ok := instance.(*appsv1beta4.EmqxEnterprise)
 		if !ok {
 			return emperror.New("blueGreenUpdatingStatus only support EmqxEnterprise")
 		}
 
 		originSts := inClusterStss[len(inClusterStss)-1]
+		// 这个是什么逻辑？
+		// 只用支持两个吗？
+		// 三个怎么办？
 		currentSts := inClusterStss[len(inClusterStss)-2]
 
 		enterprise.GetStatus().SetCurrentStatefulSetVersion(currentSts.Status.CurrentRevision)
