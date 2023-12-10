@@ -12,6 +12,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 type syncConfig struct {
@@ -19,6 +20,8 @@ type syncConfig struct {
 }
 
 func (s *syncConfig) reconcile(ctx context.Context, instance *appsv2beta1.EMQX, r innerReq.RequesterInterface) subResult {
+	log := log.FromContext(ctx).WithValues("subreconciler", "syncConfig")
+	log.Info("reconciling")
 	hoconConfig, _ := hocon.ParseString(instance.Spec.Config.Data)
 
 	// If core nodes is nil, the EMQX is in the process of being created

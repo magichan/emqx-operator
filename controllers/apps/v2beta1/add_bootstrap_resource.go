@@ -13,6 +13,7 @@ import (
 
 	appsv2beta1 "github.com/emqx/emqx-operator/apis/apps/v2beta1"
 	innerReq "github.com/emqx/emqx-operator/internal/requester"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 	"github.com/rory-z/go-hocon"
 	"github.com/sethvargo/go-password/password"
 )
@@ -22,6 +23,8 @@ type addBootstrap struct {
 }
 
 func (a *addBootstrap) reconcile(ctx context.Context, instance *appsv2beta1.EMQX, _ innerReq.RequesterInterface) subResult {
+	log := log.FromContext(ctx).WithValues("subreconciler", "addBootstrap")
+	log.Info("reconciling")
 	bootstrapAPIKeys, err := a.getAPIKeyString(ctx, instance)
 	if err != nil {
 		return subResult{err: emperror.Wrap(err, "failed to get bootstrap api keys")}

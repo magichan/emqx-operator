@@ -13,6 +13,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 type updateStatus struct {
@@ -20,6 +21,8 @@ type updateStatus struct {
 }
 
 func (u *updateStatus) reconcile(ctx context.Context, instance *appsv2beta1.EMQX, r innerReq.RequesterInterface) subResult {
+	log := log.FromContext(ctx).WithValues("subreconciler", "updateStatus")
+	log.Info("reconciling")
 	if instance.Spec.ReplicantTemplate != nil && instance.Status.ReplicantNodesStatus == nil {
 		instance.Status.ReplicantNodesStatus = &appsv2beta1.EMQXNodesStatus{
 			Replicas: *instance.Spec.ReplicantTemplate.Spec.Replicas,

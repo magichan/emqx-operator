@@ -98,6 +98,8 @@ func (r *EMQXReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 		}
 		return ctrl.Result{}, err
 	}
+	logger.Info("instance %s", instance.GetName())
+	
 
 	if instance.GetDeletionTimestamp() != nil {
 		return ctrl.Result{}, nil
@@ -110,6 +112,11 @@ func (r *EMQXReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	}
 
 	requester, err := newRequester(r.Client, instance)
+	if requester == nil {
+		logger.Info("requester is nil")
+	}else{
+		logger.Info("requester is not nil")
+	}
 	if err != nil {
 		if k8sErrors.IsNotFound(emperror.Cause(err)) {
 			_ = (&addBootstrap{r}).reconcile(ctx, instance, nil)
