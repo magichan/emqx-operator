@@ -99,6 +99,7 @@ func main() {
 		LeaseDuration:          pointer.Duration(time.Second * 30),
 		RenewDeadline:          pointer.Duration(time.Second * 20),
 	})
+	setupLog.Info("hello world")
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
 		os.Exit(1)
