@@ -103,6 +103,8 @@ func getReplicaSetList(ctx context.Context, k8sClient client.Client, instance *a
 
 	for _, rs := range list.Items {
 		if hash, ok := rs.Labels[appsv2beta1.LabelsPodTemplateHashKey]; ok {
+			// RS 的 Pod 的 hash 值
+			// 判断是否是当前的 Instance 的 RS
 			if hash == instance.Status.ReplicantNodesStatus.UpdateRevision {
 				updateRs = rs.DeepCopy()
 			}

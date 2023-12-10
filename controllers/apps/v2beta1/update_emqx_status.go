@@ -30,6 +30,8 @@ func (u *updateStatus) reconcile(ctx context.Context, instance *appsv2beta1.EMQX
 	}
 
 	updateRs, currentRs, oldRsList := getReplicaSetList(ctx, u.Client, instance)
+	// 需要注释
+	// 基于 repliat set 进行扩缩容时，currentRs 为 nil，此时需要从 oldRsList 中获取
 	if updateRs != nil {
 		if currentRs == nil || currentRs.Status.Replicas == 0 {
 			var i int
@@ -72,10 +74,14 @@ func (u *updateStatus) reconcile(ctx context.Context, instance *appsv2beta1.EMQX
 	}
 
 	if r == nil {
+		// 没有请求器，意味着 EMQX 集群没有部署，直接返回
 		return subResult{}
 	}
 
 	// check emqx node status
+	// 从 emqx 的 api 中获取 Node 对象列表
+	// 在根据 k8s 的 pod 信息填充 Node 对象的 PodUID 和 ControllerUID 字段
+	// Core 和 replicat 的匹配关系不同，需要分别处理
 	coreNodes, replNodes, err := u.getEMQXNodes(ctx, instance, r)
 	if err != nil {
 		u.EventRecorder.Event(instance, corev1.EventTypeWarning, "FailedToGetNodeStatuses", err.Error())
@@ -90,6 +96,7 @@ func (u *updateStatus) reconcile(ctx context.Context, instance *appsv2beta1.EMQX
 		if node.NodeStatus == "running" {
 			instance.Status.CoreNodesStatus.ReadyReplicas++
 		}
+		// core node 的 currentReplicas 和 updateReplicas 需要根据 curent statusful set 和 update stateful set 的 uid 进行匹配
 		if currentSts != nil && node.ControllerUID == currentSts.UID {
 			instance.Status.CoreNodesStatus.CurrentReplicas++
 		}
