@@ -4,18 +4,18 @@ import (
 	"context"
 
 	emperror "emperror.dev/errors"
+	"github.com/rory-z/go-hocon"
+	"github.com/sethvargo/go-password/password"
 	corev1 "k8s.io/api/core/v1"
 	k8sErrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	appsv2beta1 "github.com/emqx/emqx-operator/apis/apps/v2beta1"
 	innerReq "github.com/emqx/emqx-operator/internal/requester"
-	"sigs.k8s.io/controller-runtime/pkg/log"
-	"github.com/rory-z/go-hocon"
-	"github.com/sethvargo/go-password/password"
 )
 
 type addBootstrap struct {
