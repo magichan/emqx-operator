@@ -114,6 +114,7 @@ func (a *addCore) reconcile(ctx context.Context, instance *appsv2beta1.EMQX, _ i
 }
 
 func getNewStatefulSet(instance *appsv2beta1.EMQX) *appsv1.StatefulSet {
+	// dashboard service port 获取
 	svcPorts, _ := appsv2beta1.GetDashboardServicePort(instance.Spec.Config.Data)
 
 	preSts := generateStatefulSet(instance)
